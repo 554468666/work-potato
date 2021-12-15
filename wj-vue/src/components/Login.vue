@@ -15,7 +15,7 @@
                    label-position="left"><span style="color: #505458">记住密码</span></el-checkbox>
       <el-form-item style="width: 100%">
         <el-button type="primary" style="width: 40%;background: #505458;border: none" v-on:click="login">登录</el-button>
-        <router-link to="register"><el-button type="primary" style="width: 40%;background: #505458;border: none">注册</el-button></router-link>
+        <router-link to="register"><el-button type="primary" style="width: 40%;background: #505458;border: none" v-on:click="register">注册</el-button></router-link>
       </el-form-item>
     </el-form>
   </body>
@@ -57,6 +57,10 @@
             }
           })
           .catch(failResponse => {})
+      },
+      register () {
+        var _this = this
+          _this.$router.replace('/login')
       }
       }
     }

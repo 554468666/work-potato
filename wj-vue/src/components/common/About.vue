@@ -1,9 +1,11 @@
 <template>
   <div class="footer">
     <div style="border-top:1px #1F1F1F solid;">
-      <p class="alt" style="color:#999; line-height:0">&copy; 版权所有：Evan-Nightly &nbsp;
+      <p class="alt" style="color:#999; line-height:0">&copy; 版权所有：ZBCHEN &nbsp;
         <span>技术支持：</span>
-        <a href="" target="_blank" style="color:#999;">Evan & MMK</a>
+        <span  target="_blank" style="color:#999;">ZBCHEN</span>
+        <span>联系我们：</span>
+        <span target="_blank" style="color:#999;">554468666@qq.com</span>
       </p>
     </div>
   </div>
