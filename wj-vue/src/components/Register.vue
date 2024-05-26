@@ -60,7 +60,7 @@
             email: this.loginForm.email
           })
           .then(resp => {
-            if (resp.data.code === 200) {
+            if (resp.data.code === '200') {
               this.$alert('注册成功', '提示', {
                 confirmButtonText: '确定'
               })

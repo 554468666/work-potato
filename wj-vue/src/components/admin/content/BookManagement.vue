@@ -113,7 +113,7 @@
         }).then(() => {
             this.$axios
               .post('/admin/content/books/delete', {id: id}).then(resp => {
-              if (resp && resp.data.code === 200) {
+              if (resp && resp.data.code === '200') {
                 this.loadBooks()
               }
             })
@@ -147,7 +147,7 @@
       loadBooks () {
         var _this = this
         this.$axios.get('/books').then(resp => {
-          if (resp && resp.data.code === 200) {
+          if (resp && resp.data.code === '200') {
             _this.books = resp.data.result
           }
         })

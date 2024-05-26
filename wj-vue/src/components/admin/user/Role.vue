@@ -145,7 +145,7 @@
       listPerms () {
         var _this = this
         this.$axios.get('/admin/role/perm').then(resp => {
-          if (resp && resp.data.code === 200) {
+          if (resp && resp.data.code === '200') {
             _this.perms = resp.data.result
           }
         })
@@ -153,7 +153,7 @@
       listMenus () {
         var _this = this
         this.$axios.get('/admin/role/menu').then(resp => {
-          if (resp && resp.data.code === 200) {
+          if (resp && resp.data.code === '200') {
             _this.menus = resp.data.result
           }
         })
