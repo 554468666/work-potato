@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 40px">
-    <!--<el-button @click="addArticle()">添加文章</el-button>-->
+
     <div class="articles-area">
       <el-card style="text-align: left">
         <div v-for="article in articles" :key="article.id">
@@ -13,8 +13,14 @@
             style="margin:18px 0 0 30px;width:100px;height: 100px"
             :src="article.articleCover"
             fit="cover"></el-image>
-          <el-divider></el-divider>
+          <el-divider>
+            <el-button @click="addArticle()"><strong>点赞</strong></el-button>
+            <el-button @click="addArticle()"><strong>评论</strong></el-button>
+            <el-button @click="addArticle()"><strong>收藏</strong></el-button>
+            <el-button @click="addArticle()"><strong>举报</strong></el-button>
+          </el-divider>
         </div>
+        <el-button @click="addArticle()"><strong>发表文章</strong></el-button>
       </el-card>
     </div>
     <el-pagination

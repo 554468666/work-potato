@@ -13,7 +13,7 @@ File Encoding         : 65001
 Date: 2020-04-12 09:41:20
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+/*SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
 -- Table structure for admin_menu
@@ -149,3 +149,4 @@ CREATE TABLE `user` (
   `enabled` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
+*/

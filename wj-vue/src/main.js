@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import jsCookie from 'js-cookie'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import 'echarts/theme/macarons.js'
 import store from './store'
+import QuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 import {
   Pagination,
@@ -63,7 +68,9 @@ import {
   Notification
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(QuillEditor)
+Vue.use(infiniteScroll)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Menu)
@@ -133,6 +140,7 @@ axios.defaults.withCredentials = true
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 Vue.use(mavonEditor)
+Vue.prototype.$cookie = jsCookie
 
 router.beforeEach((to, from, next) => {
     if (store.state.username && to.path.startsWith('/admin')) {

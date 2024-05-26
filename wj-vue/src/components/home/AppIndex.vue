@@ -11,9 +11,9 @@
         <slogan id="slogan"></slogan>
         <about id="about"></about>
       </div>
+      <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </div>
 </template>
-
 <script>
   import Carousel from './Carousel'
   import QuickNav from './QuickNav'

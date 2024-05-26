@@ -61,6 +61,11 @@ export default new Router({
       component: () => import('../components/Register')
     },
     {
+      path: '/readpage',
+      name: 'ReadPage',
+      component: () => import('../components/home/ReadPage')
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: () => import('../components/admin/AdminIndex'),

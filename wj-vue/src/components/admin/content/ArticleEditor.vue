@@ -1,106 +1,137 @@
 <template>
-  <div>
-    <el-row style="margin: 18px 0px 0px 18px ">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/admin/dashboard'}">管理中心</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/admin/content/book'}">内容管理</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/admin/content/article'}">文章管理</el-breadcrumb-item>
-        <el-breadcrumb-item>编辑器</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-row>
-    <el-row>
-      <el-input
-        v-model="article.articleTitle"
-        style="margin: 10px 0px;font-size: 18px;"
-        placeholder="请输入标题"></el-input>
-    </el-row>
-    <el-row style="height: calc(100vh - 140px);">
-      <mavon-editor
-        v-model="article.articleContentMd"
-        style="height: 100%;"
-        ref=md
-        @save="saveArticles"
-        fontSize="16px">
-        <button type="button" class="op-icon el-icon-document" :title="'摘要/封面'" slot="left-toolbar-after"
-                @click="dialogVisible = true"></button>
-      </mavon-editor>
-      <el-dialog
-        :visible.sync="dialogVisible"
-        width="30%">
-        <el-divider content-position="left">摘要</el-divider>
-        <el-input
-          type="textarea"
-          v-model="article.articleAbstract"
-          rows="6"
-          maxlength="255"
-          show-word-limit></el-input>
-        <el-divider content-position="left">封面</el-divider>
-        <div style="margin-top: 20px">
-          <el-input v-model="article.articleCover" autocomplete="off" placeholder="图片 URL"></el-input>
-          <img-upload @onUpload="uploadImg" ref="imgUpload" style="margin-top: 5px"></img-upload>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
-      </el-dialog>
-    </el-row>
-  </div>
+  <el-form :model="form" :rules="rules" ref="form" label-width="120px" class="demo-ruleForm">
+    <el-form-item label="标题" prop="title">
+      <el-input v-model="form.title"></el-input>
+    </el-form-item>
+    <el-form-item label="内容" prop="content">
+      <el-input type="textarea" v-model="form.content"></el-input>
+    </el-form-item>
+    <el-form-item label="图片">
+      <el-upload
+        class="avatar-uploader"
+        action="/your/upload/api"
+        :show-file-list="false"
+        :on-success="handleSuccess"
+        :before-upload="beforeAvatarUpload"
+      >
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm('form')">发布</el-button>
+      <el-button @click="resetForm('form')">重置</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
-  import ImgUpload from './ImgUpload'
-
-  export default {
-    name: 'Editor',
-    components: {ImgUpload},
-    data () {
-      return {
-        article: {},
-        dialogVisible: false
-      }
-    },
-    mounted () {
-      if (this.$route.params.article) {
-        this.article = this.$route.params.article
-      }
-    },
-    methods: {
-      saveArticles (value, render) {
-        // value 是 md，render 是 html
-        this.$confirm('是否保存并发布文章?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            this.$axios
-              .post('/admin/content/article', {
-                id: this.article.id,
-                articleTitle: this.article.articleTitle,
-                articleContentMd: value,
-                articleContentHtml: render,
-                articleAbstract: this.article.articleAbstract,
-                articleCover: this.article.articleCover,
-                articleDate: this.article.articleDate
-              }).then(resp => {
-              if (resp && resp.data.code === 200) {
-                this.$message({
-                  type: 'info',
-                  message: '已保存成功'
-                })
+export default {
+  data () {
+    var validateTitle = (rule, value, callback) => {
+            if (!value) {
+              return callback(new Error('请输入标题'))
+            }
+            setTimeout(() => {
+              if (value.length < 5) {
+                callback(new Error('标题长度不能小于 5 个字符'))
+                callback(new Error('标题长度不能小于 5 个字符'))
+              } else {
+                callback()
               }
-            })
+            }, 1000)
+    }
+    var validateContent = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入内容'))
+        }
+        setTimeout(() => {
+          if (value.length < 10) {
+            callback(new Error('内容长度不能小于 10 个字符'))
+          } else {
+            callback()
           }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消发布'
-          })
-        })
+        }, 1000)
+    }
+    return {
+      form: {
+        title: '',
+        content: '',
+        imageUrl: 'https://s2.loli.net/2024/04/20/' // 用于存储上传后的图片URL
       },
-      uploadImg () {
-        this.article.articleCover = this.$refs.imgUpload.url
+      rules: {
+        title: [
+          { validator: validateTitle, trigger: 'blur' }
+        ],
+        content: [
+          { validator: validateContent, trigger: 'blur' }
+        ]
+      },
+      imageUrl: '' // 初始为空，上传成功后设置
+    }
+  },
+  methods: {
+    beforeAvatarUpload (file) {
+      // 上传图片前的钩子，可以在这里限制图片的大小、类型等
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 JPG/PNG 格式!')
       }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    handleSuccess (response, file, fileList) {
+      // 上传成功后的钩子，假设服务器返回了图片的 URL
+      this.imageUrl = response.data.url // 假设服务器返回的数据结构是 { url: '图片的URL' }
+    },
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 发送包含图片URL和其他表单数据的请求到后端
+          // 这里只是一个示例，你需要根据实际情况来发送请求
+          console.log('表单验证通过，可以发送数据到后端')
+          // 假设 form.imageUrl 就是你要上传的图片的 URL
+          // 使用 axios 或其他库发送 POST 请求到后端 API
+        } else {
+          console.log('表单验证失败')
+          return false
+        }
+      })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.imageUrl = '' // 重置图片 URL
     }
   }
+}
 </script>
+
+<style scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>

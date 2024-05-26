@@ -40,6 +40,19 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- mybatisPlus 核心库 -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<!-- 引入阿里数据库连接池 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.1.6</version>
+		</dependency>
+
 		<!-- log4j2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,6 +84,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--smms图片上传-->
+		<dependency>
+			<groupId>com.konghq</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>3.13.2</version>
+		</dependency>
+
 		<!-- elastic search -->
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
